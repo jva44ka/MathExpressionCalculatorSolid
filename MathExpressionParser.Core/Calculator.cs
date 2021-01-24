@@ -1,5 +1,5 @@
 ﻿using MathExpression.Core;
-using TParser = MathExpressionParser.Core.Parser.Parser;
+using TParser = MathExpressionParser.Core.Parser;
 
 namespace MathExpressionParser
 {
@@ -10,7 +10,9 @@ namespace MathExpressionParser
 
         public double CalculateExpression(string expression)
         {
-            return _parser.Evaluate(expression);
+            //return _parser.Evaluate(expression);
+            var compiledExp = _parser.GetExpression(expression).Compile();
+            return compiledExp.Invoke();
         }
     }
 }

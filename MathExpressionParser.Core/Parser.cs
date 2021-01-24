@@ -2,8 +2,9 @@
 using MathExpressionParser.Core.Exceptions;
 using MathExpressionParser.Core.Extensions;
 using System;
+using System.Linq.Expressions;
 
-namespace MathExpressionParser.Core.Parser
+namespace MathExpressionParser.Core
 {
     /*
      * Синтаксический анализатор методом рекурсивного спуска
@@ -14,6 +15,21 @@ namespace MathExpressionParser.Core.Parser
         int expIdx; // Текущий индекс в выражении,
         string token; // Текущая лексема.
         LexTypes tokType; // Тип лексемы.
+
+        /// <summary>
+        /// Возвращает скомпилированное дерево выражений по строке в параметре
+        /// </summary>
+        /// <returns></returns>
+        internal Expression<Func<double>> GetExpression(string expstr)
+        {
+            //Expression firestArg = 
+            return null;
+        }
+
+        private Expression GetSubTree()
+        {
+            return null;
+        }
 
         // Входная точка анализатора.
         internal double Evaluate(string expstr)
