@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace MathExpressionParser.Core
 {
-    internal sealed class TreeBuilder<T> : ITreeBuilder<T>
+    public sealed class TreeBuilder<T> : ITreeBuilder<T>
         where T : struct, IConvertible
     {
         private readonly Stack<Expression> expressionStack = new Stack<Expression>();

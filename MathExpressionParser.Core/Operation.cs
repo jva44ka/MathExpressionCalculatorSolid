@@ -7,7 +7,7 @@ namespace MathExpressionParser.Core
     /// <summary>
     /// Инкапсулирует список операций над числами
     /// </summary>
-    internal sealed class Operation
+    public sealed class Operation
     {
         private readonly int _precedence;
         private readonly string _name;

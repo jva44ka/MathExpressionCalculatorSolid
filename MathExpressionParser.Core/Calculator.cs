@@ -4,7 +4,10 @@ using System;
 
 namespace MathExpressionParser.Core
 {
-    // Внешний интерфейс для других проектов в решении
+    /// <summary>
+    /// Калькулятор, позволяющий просчитать мат. выражение по строке
+    /// </summary>
+    /// <typeparam name="T">Тип, к которому будут каститься числа при обнаружении</typeparam>
     public sealed class Calculator<T> : ICalculator<T>
         where T : struct, IConvertible
     {
@@ -22,6 +25,10 @@ namespace MathExpressionParser.Core
             return compiledTree.Invoke();
         }
 
+        /// <summary>
+        /// Возвращает инстанс Calculator с дефолтными зивисимостями
+        /// </summary>
+        /// <returns></returns>
         public static Calculator<T> GetDefaultInstance()
         {
             return new Calculator<T>(new TreeBuilder<T>());
