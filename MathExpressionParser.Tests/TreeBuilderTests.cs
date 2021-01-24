@@ -41,6 +41,19 @@ namespace MathExpressionParser.Tests
                 BindingFlags.NonPublic | BindingFlags.Instance);
         }
 
+        [TestCase("2 + 5", new int[] { 2, 5 })]
+        [TestCase("10 + 15", new int[] { 10, 15 })]
+        [TestCase("255 + 1", new int[] { 255, 1 })]
+        public void BuildSimpleBinaryTreeTest(string testExp, int[] testNums)
+        {
+            var realResult = (Expression<Func<decimal>>)_buildTreeMethod.Invoke(_treeBuilderInstance, new object[] { testExp });
+            var leftSubTree = (ConstantExpression)((BinaryExpression)realResult.Body).Left;
+            var rightSubTree = (ConstantExpression)((BinaryExpression)realResult.Body).Right;
+
+            Assert.AreEqual(leftSubTree.Value, testNums[0]);
+            Assert.AreEqual(rightSubTree.Value, testNums[1]);
+        }
+
         [TestCase("5")]
         [TestCase("42")]
         [TestCase("388")]
