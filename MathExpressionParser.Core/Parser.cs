@@ -26,8 +26,11 @@ namespace MathExpressionParser.Core
             return null;
         }
 
-        private Expression GetSubTree()
+        private Expression GetSubTree(string subTreeStr)
         {
+            var localIdx = 0;
+            
+
             return null;
         }
 
