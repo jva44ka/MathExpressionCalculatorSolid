@@ -15,7 +15,7 @@ namespace MathExpressionParser
 
             Console.WriteLine("Введите \"q\" если захотите выйти \nВведите выражение");
             inputExpression = Console.ReadLine();
-
+            
             while (inputExpression != exitSymbAsString)
             {
                 result = calculator.CalculateExpression(inputExpression);

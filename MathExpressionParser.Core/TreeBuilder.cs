@@ -7,13 +7,13 @@ using System.Linq.Expressions;
 
 namespace MathExpressionParser.Core
 {
-    internal sealed class TreeBuilder<T> : ITreeBuilder<T>
+    public sealed class TreeBuilder<T> : ITreeBuilder<T>
         where T : struct, IConvertible
     {
         private readonly Stack<Expression> expressionStack = new Stack<Expression>();
         private readonly Stack<char> operatorStack = new Stack<char>();
 
-        public Expression<Func<T>> BuildTree(string expression)
+        Expression<Func<T>> ITreeBuilder<T>.BuildTree(string expression)
         {
             if (string.IsNullOrWhiteSpace(expression))
             {
