@@ -35,7 +35,6 @@ namespace MathExpressionParser.Core
             _name = name;
         }
 
-
         public static explicit operator Operation(char operation)
         {
             Operation result;
