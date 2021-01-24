@@ -19,6 +19,8 @@ namespace MathExpressionParser.Core
                 return 0;
             }
 
+            expression = RemoveSpaces(expression);
+
             operatorStack.Clear();
             expressionStack.Clear();
 
@@ -113,6 +115,13 @@ namespace MathExpressionParser.Core
 
                 expressionStack.Push(((Operation)operatorStack.Pop()).Apply(left, right));
             }
+        }
+
+        private string RemoveSpaces(string inputString)
+        {
+            return new string(inputString.ToCharArray()
+                .Where(c => !char.IsWhiteSpace(c))
+                .ToArray());
         }
     }
 }
