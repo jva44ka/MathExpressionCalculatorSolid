@@ -10,7 +10,7 @@ namespace MathExpressionParser
             string inputExpression = string.Empty;
 
             var calculator = new Calculator();
-            double result = default;
+            decimal result = default;
 
             Console.WriteLine("Введите \"q\" если захотите выйти \nВведите выражение");
             inputExpression = Console.ReadLine();
