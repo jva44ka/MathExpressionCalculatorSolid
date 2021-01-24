@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Text;
 
 namespace MathExpressionParser.Core
 {
+    /// <summary>
+    /// Инкапсулирует список операций над числами
+    /// </summary>
     internal sealed class Operation
     {
         private readonly int _precedence;

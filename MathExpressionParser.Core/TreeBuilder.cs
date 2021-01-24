@@ -1,22 +1,23 @@
-﻿using System;
+﻿using MathExpressionParser.Core.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 
 namespace MathExpressionParser.Core
 {
-    internal sealed class TreeBuilder
+    internal sealed class TreeBuilder<T> : ITreeBuilder<T>
+        where T : struct, IConvertible
     {
         private readonly Stack<Expression> expressionStack = new Stack<Expression>();
         private readonly Stack<char> operatorStack = new Stack<char>();
 
-        public decimal Evaluate(string expression)
+        public Expression<Func<T>> BuildTree(string expression)
         {
             if (string.IsNullOrWhiteSpace(expression))
             {
-                return 0;
+                return Expression.Lambda<Func<T>>(Expression.Constant(0));
             }
 
             expression = RemoveSpaces(expression);
@@ -72,8 +73,7 @@ namespace MathExpressionParser.Core
 
             EvaluateWhile(() => operatorStack.Count > 0);
 
-            var compiled = Expression.Lambda<Func<decimal>>(expressionStack.Pop()).Compile();
-            return compiled();
+            return Expression.Lambda<Func<T>>(expressionStack.Pop());
         }
 
         private Expression ReadOperand(TextReader reader)
@@ -97,7 +97,7 @@ namespace MathExpressionParser.Core
                 }
             }
 
-            return Expression.Constant(decimal.Parse(operand));
+            return Expression.Constant(Convert.ChangeType(operand, typeof(T)));
         }
 
         private Operation ReadOperation(TextReader reader)
