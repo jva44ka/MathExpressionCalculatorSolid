@@ -24,7 +24,7 @@ namespace MathExpressionParser.Tests
         public void PositiveTestSet(string testExpression)
         {
             var parserExpressionRes = _calculator.CalculateExpression(testExpression);
-            var rightExpressionRes = CSharpScript.EvaluateAsync<double>(testExpression).Result;
+            var rightExpressionRes = CSharpScript.EvaluateAsync<decimal>(testExpression).Result;
             Assert.AreEqual(parserExpressionRes, rightExpressionRes);
         }
     }

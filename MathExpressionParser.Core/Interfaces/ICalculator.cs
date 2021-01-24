@@ -4,6 +4,6 @@ namespace MathExpression.Core
 {
     public interface ICalculator
     {
-        public double CalculateExpression(string expression);
+        public decimal CalculateExpression(string expression);
     }
 }
