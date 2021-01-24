@@ -1,3 +1,4 @@
+using MathExpressionParser.Core;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using NUnit.Framework;
 
@@ -13,7 +14,7 @@ namespace MathExpressionParser.Tests
             "3 * (2 + 5) / 3"
         };
 
-        private readonly Calculator _calculator = new Calculator();
+        private readonly Calculator<decimal> _calculator = Calculator<decimal>.GetDefaultInstance();
 
         [SetUp]
         public void Setup()

@@ -2,8 +2,8 @@
 
 namespace MathExpression.Core
 {
-    public interface ICalculator
+    public interface ICalculator<T> where T : struct, IConvertible
     {
-        public decimal CalculateExpression(string expression);
+        public T CalculateExpression(string expression);
     }
 }

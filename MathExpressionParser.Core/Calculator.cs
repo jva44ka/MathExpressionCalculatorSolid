@@ -1,19 +1,30 @@
 ﻿using MathExpression.Core;
-using MathExpressionParser.Core;
+using MathExpressionParser.Core.Interfaces;
+using System;
 
-namespace MathExpressionParser
+namespace MathExpressionParser.Core
 {
     // Внешний интерфейс для других проектов в решении
-    public class Calculator : ICalculator
+    public sealed class Calculator<T> : ICalculator<T>
+        where T : struct, IConvertible
     {
-        private TreeBuilder<decimal> _treeBuilder = new TreeBuilder<decimal>();
+        private ITreeBuilder<T> _treeBuilder;
 
-        public decimal CalculateExpression(string expression)
+        public Calculator(ITreeBuilder<T> treeBuilder)
         {
-            //return _parser.Evaluate(expression);
-            //var compiledExp = _parser.GetExpression(expression).Compile();
-            return _treeBuilder.BuildTree(expression).Compile()();
-            //return compiledExp.Invoke();
+            _treeBuilder = treeBuilder;
+        }
+
+        public T CalculateExpression(string expression)
+        {
+            var tree = _treeBuilder.BuildTree(expression);
+            var compiledTree = tree.Compile();
+            return compiledTree.Invoke();
+        }
+
+        public static Calculator<T> GetDefaultInstance()
+        {
+            return new Calculator<T>(new TreeBuilder<T>());
         }
     }
 }
