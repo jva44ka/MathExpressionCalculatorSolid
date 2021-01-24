@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MathExpressionParser.Core;
+using System;
 
 namespace MathExpressionParser
 {
@@ -9,12 +10,12 @@ namespace MathExpressionParser
             var exitSymbAsString = "q";
             string inputExpression = string.Empty;
 
-            var calculator = new Calculator();
-            double result = default;
+            var calculator = Calculator<decimal>.GetDefaultInstance();
+            decimal result = default;
 
             Console.WriteLine("Введите \"q\" если захотите выйти \nВведите выражение");
             inputExpression = Console.ReadLine();
-
+            
             while (inputExpression != exitSymbAsString)
             {
                 result = calculator.CalculateExpression(inputExpression);

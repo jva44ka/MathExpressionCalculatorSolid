@@ -1,16 +1,37 @@
 ﻿using MathExpression.Core;
-using TParser = MathExpressionParser.Core.Parser.Parser;
+using MathExpressionParser.Core.Interfaces;
+using System;
 
-namespace MathExpressionParser
+namespace MathExpressionParser.Core
 {
-    // Внешний интерфейс для других проектов в решении
-    public class Calculator : ICalculator
+    /// <summary>
+    /// Калькулятор, позволяющий просчитать мат. выражение по строке
+    /// </summary>
+    /// <typeparam name="T">Тип, к которому будут каститься числа при обнаружении</typeparam>
+    public sealed class Calculator<T> : ICalculator<T>
+        where T : struct, IConvertible
     {
-        private TParser _parser = new TParser();
+        private ITreeBuilder<T> _treeBuilder;
 
-        public double CalculateExpression(string expression)
+        public Calculator(ITreeBuilder<T> treeBuilder)
         {
-            return _parser.Evaluate(expression);
+            _treeBuilder = treeBuilder;
+        }
+
+        public T CalculateExpression(string expression)
+        {
+            var tree = _treeBuilder.BuildTree(expression);
+            var compiledTree = tree.Compile();
+            return compiledTree.Invoke();
+        }
+
+        /// <summary>
+        /// Возвращает инстанс Calculator с дефолтными зивисимостями
+        /// </summary>
+        /// <returns></returns>
+        public static Calculator<T> GetDefaultInstance()
+        {
+            return new Calculator<T>(new TreeBuilder<T>());
         }
     }
 }
