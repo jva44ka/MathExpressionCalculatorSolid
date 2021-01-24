@@ -13,7 +13,7 @@ namespace MathExpressionParser.Core
         private readonly Stack<Expression> expressionStack = new Stack<Expression>();
         private readonly Stack<char> operatorStack = new Stack<char>();
 
-        Expression<Func<T>> ITreeBuilder<T>.BuildTree(string expression)
+        public Expression<Func<T>> BuildTree(string expression)
         {
             if (string.IsNullOrWhiteSpace(expression))
             {

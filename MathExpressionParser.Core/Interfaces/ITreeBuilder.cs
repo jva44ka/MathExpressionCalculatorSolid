@@ -9,6 +9,6 @@ namespace MathExpressionParser.Core.Interfaces
     /// <typeparam name="T">Тип, к которому будут каститься числа при обнаружении</typeparam>
     public interface ITreeBuilder<T> where T : struct, IConvertible
     {
-        internal Expression<Func<T>> BuildTree(string expression);
+        public Expression<Func<T>> BuildTree(string expression);
     }
 }

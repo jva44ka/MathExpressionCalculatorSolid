@@ -3,6 +3,8 @@ using Microsoft.CodeAnalysis.CSharp.Scripting;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 
@@ -12,31 +14,96 @@ namespace MathExpressionParser.Tests
     {
         #region reflectedMembers
         private Type _treeBuilderType;
-        private TypeInfo _treeBuilderTypeInfo;
+        private MethodInfo _buildTreeMethod;
+        private MethodInfo _readOperandMethod;
+        private MethodInfo _readOperationMethod;
         private MethodInfo _removeSpacesMethod;
         #endregion
 
-        private TreeBuilder<decimal> _treeBuilderInstance = new TreeBuilder<decimal>();
-        private object _treeBuilderInstanceConstructed;
+        private TreeBuilder<decimal> _treeBuilderInstance;
 
 
         [SetUp]
         public void Setup()
         {
             _treeBuilderType = typeof(TreeBuilder<>);
-            _treeBuilderTypeInfo = _treeBuilderType.GetTypeInfo();
             Type[] typeArgs = { typeof(decimal) };
             Type constructed = _treeBuilderType.MakeGenericType(typeArgs);
-            _treeBuilderInstanceConstructed = Activator.CreateInstance(constructed);
+            _treeBuilderInstance = (TreeBuilder<decimal>)Activator.CreateInstance(constructed);
 
+            _buildTreeMethod = constructed.GetMethod("BuildTree",
+                BindingFlags.Public | BindingFlags.Instance);
+            _readOperandMethod = constructed.GetMethod("ReadOperand",
+                BindingFlags.NonPublic | BindingFlags.Instance);
+            _readOperationMethod = constructed.GetMethod("ReadOperation",
+                BindingFlags.NonPublic | BindingFlags.Instance);
             _removeSpacesMethod = constructed.GetMethod("RemoveSpaces", 
                 BindingFlags.NonPublic | BindingFlags.Instance);
         }
 
-        [Test]
-        public void RemoveSpacesMethod()
+        [TestCase("5")]
+        [TestCase("42")]
+        [TestCase("388")]
+        [TestCase("25")]
+        public void ReadOperandTest(string testSet)
         {
-            var realResult = _removeSpacesMethod.Invoke(_treeBuilderInstanceConstructed, new object[] { "5 + 5  * 5" });
+            using (var reader = new StringReader(testSet))
+            {
+                var realResult = (ConstantExpression)_readOperandMethod.Invoke(_treeBuilderInstance, new object[] { reader });
+                var expectedResult = Expression.Constant(decimal.Parse(testSet));
+                Assert.AreEqual(realResult.NodeType, expectedResult.NodeType);
+                Assert.AreEqual(realResult.Value, expectedResult.Value);
+            }
+        }
+
+        #region ReadOperationTest
+        [Test]
+        public void ReadOperationAdditionTest()
+        {
+            using (var reader = new StringReader("+"))
+            {
+                var realResult = _readOperationMethod.Invoke(_treeBuilderInstance, new object[] { reader });
+                Assert.AreEqual(realResult, Operation.Addition);
+            }
+        }
+
+        [Test]
+        public void ReadOperationSubstractTest()
+        {
+            using (var reader = new StringReader("-"))
+            {
+                var realResult = _readOperationMethod.Invoke(_treeBuilderInstance, new object[] { reader });
+                Assert.AreEqual(realResult, Operation.Subtraction);
+            }
+        }
+
+        [Test]
+        public void ReadOperationMultiplyTest()
+        {
+            using (var reader = new StringReader("*"))
+            {
+                var realResult = _readOperationMethod.Invoke(_treeBuilderInstance, new object[] { reader });
+                Assert.AreEqual(realResult, Operation.Multiplication);
+            }
+        }
+
+        [Test]
+        public void ReadOperationDivideTest()
+        {
+            using (var reader = new StringReader("/"))
+            {
+                var realResult = _readOperationMethod.Invoke(_treeBuilderInstance, new object[] { reader });
+                Assert.AreEqual(realResult, Operation.Division);
+            }
+        }
+        #endregion
+
+        [TestCase("5 + 5  * 5")]
+        [TestCase("5 +5 * 5 ")]
+        [TestCase("5   +     5 *      5")]
+        public void RemoveSpacesTest(string testSet)
+        {
+            var realResult = _removeSpacesMethod.Invoke(_treeBuilderInstance, new object[] { testSet });
             var expectedResult = "5+5*5";
             Assert.AreEqual(realResult, expectedResult);
         }
